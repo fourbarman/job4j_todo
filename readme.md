@@ -19,13 +19,21 @@ Tests use [JUnit5](https://junit.org/junit5/) and [Mockito](https://site.mockito
 
 ## articles
 - Page with all tasks table. Table shows task name, task creation date, current task status (completed or not).
-- All tasks table page has "create" button.
-- Three links: All tasks, Completed tasks, New tasks.
-- Detailed description available.
-- On details page task can be set to "Complete", "Edit", "Delete":
-  - "Complete" button sets "Completed" status to the task.
-  - "Edit" button redirects to edit page.
-  - "Delete" button deletes task from system and redirects to all tasks table.
+![All tasks list](https://raw.github.com/fourbarman/screenshots/main/job4j_todo/task_list.png)
+- Task list page has "create" button that redirects to "create new task" page.
+![All tasks list](https://raw.github.com/fourbarman/screenshots/main/job4j_todo/new_task.png)
+- Three links: All tasks, Completed tasks, Uncompleted tasks.
+![All tasks list](https://raw.github.com/fourbarman/screenshots/main/job4j_todo/task_list.png)
+![Uncompleted](https://raw.github.com/fourbarman/screenshots/main/job4j_todo/uncompleted_task_list.png)
+![Completed](https://raw.github.com/fourbarman/screenshots/main/job4j_todo/completed_task_list.png)
+- Detailed task description available by choosing task on tasks page.
+- On details page task can be set to "Complete", "Edit", "Delete".
+- "Complete" button sets "Completed" status to the task.
+- "Delete" button deletes task from system and redirects to all tasks table.
+![Task details](https://raw.github.com/fourbarman/screenshots/main/job4j_todo/task_details.png)
+- "Edit" button redirects to edit page.
+![All tasks list](https://raw.github.com/fourbarman/screenshots/main/job4j_todo/update_task.png)
+
 ## build and start
 Steps to start a program from sources:
 1. Create database with name "todo".
