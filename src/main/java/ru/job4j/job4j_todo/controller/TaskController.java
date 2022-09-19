@@ -63,7 +63,6 @@ public class TaskController {
 
     @PostMapping("updateTask")
     public String updateTask(@ModelAttribute Task task) {
-        System.out.println("Controller updateMethod:" + task);
         this.taskService.updateTask(task);
         return "redirect:/tasks";
     }

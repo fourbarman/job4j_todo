@@ -46,6 +46,12 @@
                 <li>
                     <a class="nav-item nav-link" th:href="@{/completedTasks/false}">Новые</a>
                 </li>
+                <li>
+                    <a class="nav-item nav-link" th:if="${user.username != 'Гость'}" th:href="@{/logout}">
+                        <span th:text="${user.username}"></span>
+                        <span> | Выйти</span>
+                    </a>
+                </li>
             </ul>
         </form>
     </div>

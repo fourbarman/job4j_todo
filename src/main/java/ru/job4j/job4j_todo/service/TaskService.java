@@ -6,7 +6,13 @@ import ru.job4j.job4j_todo.model.Task;
 import ru.job4j.job4j_todo.repository.TaskRepository;
 
 import java.util.List;
-
+/**
+ * TaskService.
+ *
+ * @author fourbarman (maks.java@yandex.ru).
+ * @version %I%, %G%.
+ * @since 19.09.2022.
+ */
 @Service
 @AllArgsConstructor
 public class TaskService {
@@ -17,7 +23,6 @@ public class TaskService {
     }
 
     public List<Task> getAllByComplete(boolean completed) {
-        System.out.println("Service: " + completed);
         return this.taskRepository.getAllByComplete(completed);
     }
 
@@ -30,7 +35,6 @@ public class TaskService {
     }
 
     public void updateTask(Task task) {
-        System.out.println("Service:" + task);
         this.taskRepository.updateTask(task);
     }
 

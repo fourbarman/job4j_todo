@@ -46,6 +46,12 @@
                 <li>
                     <a class="nav-item nav-link" th:href="@{/completedTasks/false}">Новые</a>
                 </li>
+                <li>
+                    <a class="nav-item nav-link" th:if="${user.username != 'Гость'}" th:href="@{/logout}">
+                        <span th:text="${user.username}"></span>
+                        <span> | Выйти</span>
+                    </a>
+                </li>
             </ul>
         </form>
     </div>
@@ -67,8 +73,7 @@
                                readonly>
                         <div th:if="*{!done}">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="uncompleted" checked
-                                       disabled>
+                                <input class="form-check-input" type="checkbox" value="" id="uncompleted" disabled>
                                 <label class="form-check-label" for="uncompleted">
                                     Задача выполнена
                                 </label>
@@ -76,7 +81,7 @@
                         </div>
                         <div th:if="*{done}">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="completed" disabled>
+                                <input class="form-check-input" type="checkbox" value="" id="completed" checked disabled>
                                 <label class="form-check-label" for="completed">
                                     Задача выполнена
                                 </label>
