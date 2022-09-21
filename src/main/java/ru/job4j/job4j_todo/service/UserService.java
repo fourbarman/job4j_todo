@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.job4j.job4j_todo.model.User;
 import ru.job4j.job4j_todo.repository.UserRepository;
+
+
 /**
  * UserService.
  *
@@ -21,6 +23,6 @@ public class UserService {
     }
 
     public User getUserByLoginAndPassword(String login, String password) {
-        return this.userRepository.getUserByLoginAndPassword(login, password);
+        return this.userRepository.getUserByLoginAndPassword(login, password).get();
     }
 }
