@@ -96,7 +96,7 @@ public class UserRepository {
      * @return Optional of user.
      */
     public Optional<User> getUserByLoginAndPassword(String login, String password) {
-        return crudRepository.optional("from USer where login = :fLogin and password = :Password",
+        return crudRepository.optional("from User where login = :fLogin and password = :fPassword",
                 User.class,
                 Map.of("fLogin", login, "fPassword", password)
         );

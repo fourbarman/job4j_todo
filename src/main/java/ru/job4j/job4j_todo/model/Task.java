@@ -10,6 +10,7 @@ import java.time.Instant;
 /**
  * Task.
  * Model.
+ * Join User model table on "user_id".
  *
  * @author fourbarman (maks.java@yandex.ru).
  * @version %I%, %G%.
@@ -27,4 +28,7 @@ public class Task {
     private String description;
     private Instant created;
     private boolean done;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

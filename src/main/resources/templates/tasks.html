@@ -67,6 +67,7 @@
                         <small class="text-muted">Завершена</small>
                     </span>
             </div>
+            <p class="mb-1" th:text="${'Автор: ' + task.user.username}"></p>
             <small class="text-muted" th:text="${'Создана: ' + task.created}"> </small>
             <small class="text-muted" th:text="${'| id: ' + task.id}"></small>
         </a>

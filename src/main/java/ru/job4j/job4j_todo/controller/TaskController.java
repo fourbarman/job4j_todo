@@ -5,8 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.job4j_todo.model.Task;
+import ru.job4j.job4j_todo.model.User;
 import ru.job4j.job4j_todo.service.TaskService;
 
+import javax.servlet.http.HttpSession;
 import java.time.Instant;
 /**
  * TaskController.
@@ -32,8 +34,9 @@ public class TaskController {
     }
 
     @GetMapping("/addTask")
-    public String addTask(Model model) {
-        model.addAttribute("task", new Task(0, "Описание", Instant.now(), false));
+    public String addTask(Model model, HttpSession httpSession) {
+        User user = (User)httpSession.getAttribute("user");
+        model.addAttribute("task", new Task(0, "Описание", Instant.now(), false, user));
         return "addTask";
     }
 
@@ -44,8 +47,9 @@ public class TaskController {
     }
 
     @PostMapping("createTask")
-    public String createTask(@RequestParam("desc") String desc) {
-        this.taskService.addTask(new Task(0, desc, Instant.now(), false));
+    public String createTask(@RequestParam("desc") String desc, HttpSession httpSession) {
+        User user = (User)httpSession.getAttribute("user");
+        this.taskService.addTask(new Task(0, desc, Instant.now(), false, user));
         return "redirect:/tasks";
     }
 
