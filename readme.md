@@ -36,11 +36,15 @@ Tests use [JUnit5](https://junit.org/junit5/) and [Mockito](https://site.mockito
 - ![All tasks list](https://raw.github.com/fourbarman/screenshots/main/job4j_todo/task_list.png)
 - ![Uncompleted](https://raw.github.com/fourbarman/screenshots/main/job4j_todo/uncompleted_task_list.png)
 - ![Completed](https://raw.github.com/fourbarman/screenshots/main/job4j_todo/completed_task_list.png)
+- Task list contains info about task author.
+- ![new_task](https://raw.github.com/fourbarman/screenshots/main/job4j_todo/show_author_task_list.png)
 - Detailed task description available by choosing task on tasks page.
 - On details page task can be set to "Complete", "Edit", "Delete".
 - "Complete" button sets "Completed" status to the task.
 - "Delete" button deletes task from system and redirects to all tasks table.
 - ![Task details](https://raw.github.com/fourbarman/screenshots/main/job4j_todo/task_details.png)
+- Added info about author.
+- ![Task details](https://raw.github.com/fourbarman/screenshots/main/job4j_todo/show_author_task_details.png)
 - "Edit" button redirects to edit page.
 - ![update_task](https://raw.github.com/fourbarman/screenshots/main/job4j_todo/update_task.png)
 
