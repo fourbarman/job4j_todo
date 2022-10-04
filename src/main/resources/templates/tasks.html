@@ -58,17 +58,22 @@
     <div class="list-group" th:each="task: ${tasks}">
         <a th:href="@{|/formTaskDetail/${task.id}|}"
            class="list-group-item list-group-item-action flex-column align-items-start">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1" th:text="${task.description}"></h5>
-                <span th:if="${!task.done}">
-                        <small class="text-success">Новая</small>
-                    </span>
-                <span th:if="${task.done}">
-                        <small class="text-muted">Завершена</small>
-                    </span>
+            <div class="d-flex mr-auto p-2 bd-highlight">
+                <div class="mr-auto p-2 bd-highlight">
+                    <h5 class="mb-1" th:text="${task.description}"></h5>
+                </div>
+                <div class="p-2 bd-highlight">
+                    <small class="mb-1" th:text="${task.priority.name}"></small>
+                    <span th:if="${!task.done}">
+                            <small class="text-success">Новая</small>
+                        </span>
+                    <span th:if="${task.done}">
+                            <small class="text-muted">Завершена</small>
+                        </span>
+                </div>
             </div>
-            <p class="mb-1" th:text="${'Автор: ' + task.user.username}"></p>
-            <small class="text-muted" th:text="${'Создана: ' + task.created}"> </small>
+            <small class="mb-1" th:text="${'Автор: ' + task.user.username}"></small>
+            <small class="text-muted" th:text="${'| Создана: ' + task.created}"> </small>
             <small class="text-muted" th:text="${'| id: ' + task.id}"></small>
         </a>
     </div>

@@ -12,6 +12,8 @@ import ru.job4j.job4j_todo.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
+
 /**
  * UserController.
  *
@@ -32,12 +34,12 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@ModelAttribute User user, HttpServletRequest request) {
-        User foundUser = this.userService.getUserByLoginAndPassword(user.getLogin(), user.getPassword());
-        if (foundUser == null) {
+        Optional<User> foundUser = this.userService.getUserByLoginAndPassword(user.getLogin(), user.getPassword());
+        if (foundUser.isEmpty()) {
             return "redirect:/loginPage?fail=true";
         }
         HttpSession session = request.getSession();
-        session.setAttribute("user", foundUser);
+        session.setAttribute("user", foundUser.get());
         return "redirect:/index";
     }
 
@@ -49,12 +51,12 @@ public class UserController {
 
     @PostMapping("/register")
     public String register(@ModelAttribute User user, HttpServletRequest req) {
-        User addedUser = this.userService.addUser(user);
-        if (addedUser == null) {
+        Optional<User> addedUser = this.userService.addUser(user);
+        if (addedUser.isEmpty()) {
             return "redirect:/register?fail=true";
         }
         HttpSession session = req.getSession();
-        session.setAttribute("user", addedUser);
+        session.setAttribute("user", addedUser.get());
         return "redirect:/index";
     }
 

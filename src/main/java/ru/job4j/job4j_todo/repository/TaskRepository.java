@@ -1,13 +1,12 @@
 package ru.job4j.job4j_todo.repository;
 
 import lombok.AllArgsConstructor;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import ru.job4j.job4j_todo.model.Task;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * TaskRepository.
@@ -19,7 +18,7 @@ import java.util.List;
 @Repository
 @AllArgsConstructor
 public class TaskRepository {
-    private final SessionFactory sf;
+    private final CrudRepository crudRepository;
 
     /**
      * Get all tasks.
@@ -27,14 +26,7 @@ public class TaskRepository {
      * @return List.
      */
     public List<Task> getAllTasks() {
-        List tasks;
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            tasks = session.createQuery("from Task").list();
-            session.getTransaction().commit();
-            session.close();
-        }
-        return tasks;
+        return crudRepository.query("from Task t join fetch t.priority", Task.class);
     }
 
     /**
@@ -44,14 +36,7 @@ public class TaskRepository {
      * @return List.
      */
     public List<Task> getAllByComplete(boolean completed) {
-        List tasks;
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            Query<Task> query = session.createQuery("from Task where done = :fDone", Task.class);
-            query.setParameter("fDone", completed);
-            tasks = query.list();
-        }
-        return tasks;
+        return crudRepository.query("from Task t join fetch t.priority where done = :fDone", Task.class, Map.of("fDone", completed));
     }
 
     /**
@@ -61,11 +46,7 @@ public class TaskRepository {
      * @return Added Task.
      */
     public Task addTask(Task newTask) {
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            session.save(newTask);
-            session.getTransaction().commit();
-        }
+        crudRepository.run(session -> session.persist(newTask));
         return newTask;
     }
 
@@ -75,15 +56,8 @@ public class TaskRepository {
      * @param id Id.
      * @return Found task.
      */
-    public Task findTaskById(int id) {
-        Task task;
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            Query query = session.createQuery("from Task where id = :fId", Task.class);
-            query.setParameter("fId", id);
-            task = (Task) query.uniqueResult();
-        }
-        return task;
+    public Optional<Task> findTaskById(int id) {
+        return crudRepository.optional("from Task t join fetch t.priority where t.id = :fId", Task.class, Map.of("fId", id));
     }
 
     /**
@@ -92,11 +66,7 @@ public class TaskRepository {
      * @param task Updated task.
      */
     public void updateTask(Task task) {
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            session.update(task);
-            session.getTransaction().commit();
-        }
+        crudRepository.run(session -> session.merge(task));
     }
 
     /**
@@ -105,10 +75,6 @@ public class TaskRepository {
      * @param task Task.
      */
     public void deleteTask(Task task) {
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            session.delete(task);
-            session.getTransaction().commit();
-        }
+        crudRepository.run(session -> session.delete(task));
     }
 }

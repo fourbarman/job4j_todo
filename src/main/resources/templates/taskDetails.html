@@ -74,6 +74,9 @@
                         <label for="username">Автор</label>
                         <input type="text" class="form-control" name="username" id="username" th:field="*{user.username}"
                                readonly>
+                        <label for="priority">Приоритет</label>
+                        <input type="text" class="form-control" name="priority" id="priority" th:field="*{priority.name}"
+                               readonly>
                         <div th:if="*{!done}">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="uncompleted" disabled>

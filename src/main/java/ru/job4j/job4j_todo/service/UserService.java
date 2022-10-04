@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.job4j.job4j_todo.model.User;
 import ru.job4j.job4j_todo.repository.UserRepository;
 
+import java.util.Optional;
+
 
 /**
  * UserService.
@@ -18,11 +20,24 @@ import ru.job4j.job4j_todo.repository.UserRepository;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User addUser(User user) {
+    /**
+     * Add user.
+     *
+     * @param user User.
+     * @return Optional.
+     */
+    public Optional<User> addUser(User user) {
         return this.userRepository.addUser(user);
     }
 
-    public User getUserByLoginAndPassword(String login, String password) {
-        return this.userRepository.getUserByLoginAndPassword(login, password).get();
+    /**
+     * Get user by login and password.
+     *
+     * @param login    Login.
+     * @param password Password.
+     * @return Optional.
+     */
+    public Optional<User> getUserByLoginAndPassword(String login, String password) {
+        return this.userRepository.getUserByLoginAndPassword(login, password);
     }
 }

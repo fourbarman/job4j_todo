@@ -6,6 +6,8 @@ import ru.job4j.job4j_todo.model.Task;
 import ru.job4j.job4j_todo.repository.TaskRepository;
 
 import java.util.List;
+import java.util.Optional;
+
 /**
  * TaskService.
  *
@@ -30,7 +32,7 @@ public class TaskService {
         return this.taskRepository.addTask(newTask);
     }
 
-    public Task findTaskById(int id) {
+    public Optional<Task> findTaskById(int id) {
         return this.taskRepository.findTaskById(id);
     }
 
@@ -39,13 +41,16 @@ public class TaskService {
     }
 
     public void completeTask(int id) {
-        Task task = this.taskRepository.findTaskById(id);
-        task.setDone(true);
-        this.taskRepository.updateTask(task);
+        Optional<Task> task = this.taskRepository.findTaskById(id);
+        task.ifPresent(value -> {
+            value.setDone(true);
+            this.taskRepository.updateTask(value);
+        });
+
     }
 
     public void deleteTask(int id) {
-        Task task = this.taskRepository.findTaskById(id);
-        this.taskRepository.deleteTask(task);
+        Optional<Task> task = this.taskRepository.findTaskById(id);
+        task.ifPresent(this.taskRepository::deleteTask);
     }
 }
