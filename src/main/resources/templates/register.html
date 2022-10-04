@@ -30,7 +30,7 @@
             </div>
             <div class="card-body">
                 <div th:if="${fail}" class="alert alert-danger" role="alert">
-                    Пользователь с такой почтой\телефоном уже зарегистрирован!
+                    Пользователь с таким логином уже зарегистрирован!
                 </div>
                 <form th:action="@{register}" method="POST">
                     <div class="form-group">
