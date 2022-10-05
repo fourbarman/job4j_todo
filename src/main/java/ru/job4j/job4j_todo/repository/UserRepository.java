@@ -17,7 +17,6 @@ import java.util.Optional;
 @AllArgsConstructor
 @Repository
 public class UserRepository {
-    //SessionFactory sessionFactory;
     private final CrudRepository crudRepository;
 
     /**
@@ -34,15 +33,6 @@ public class UserRepository {
             return Optional.empty();
         }
         return Optional.of(user);
-//        try (Session session = sessionFactory.openSession()) {
-//            session.persist(user);
-//        } catch (Exception e) {
-//            //
-//            e.printStackTrace();
-//            System.out.println("EXCEPTION HERE!");
-//            return Optional.empty();
-//        }
-//        return Optional.of(user);
     }
 
     /**
@@ -53,11 +43,6 @@ public class UserRepository {
      * @return Optional of user.
      */
     public Optional<User> getUserByLoginAndPassword(String login, String password) {
-//        Session session = sessionFactory.openSession();
-//        Query<User> query = session.createQuery("from User u where u.login = :fLogin and u.password = :fPassword", User.class);
-//        query.setParameter("fLogin", login);
-//        query.setParameter("fPassword", password);
-
         return this.crudRepository.optional("from User where login = :fLogin and password = :fPassword", User.class, Map.of("fLogin", login, "fPassword", password));
     }
 }
