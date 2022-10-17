@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.job4j.job4j_todo.model.Priority;
 import ru.job4j.job4j_todo.model.Task;
 import ru.job4j.job4j_todo.model.User;
+import ru.job4j.job4j_todo.service.CategoryService;
 import ru.job4j.job4j_todo.service.PriorityService;
 import ru.job4j.job4j_todo.service.TaskService;
 
@@ -28,6 +29,8 @@ public class TaskController {
     private final TaskService taskService;
     private final PriorityService priorityService;
 
+    private final CategoryService categoryService;
+
     @GetMapping("/index")
     public String index() {
         return "redirect:/tasks";
@@ -35,15 +38,20 @@ public class TaskController {
 
     @GetMapping("/tasks")
     public String tasks(Model model) {
-        model.addAttribute("tasks", this.taskService.getAllTasks());
+        List<Task> list = this.taskService.getAllTasks();
+        model.addAttribute("tasks", list);
+        //List<>
+        //model.addAttribute("categories", this.categoryService.getAllCategories());
+        for (Task t : list) {
+            System.out.println(t);
+        }
         return "tasks";
     }
 
     @GetMapping("/addTask")
     public String addTask(Model model, HttpSession httpSession) {
-        //User user = (User)httpSession.getAttribute("user");
         model.addAttribute("priorities", this.priorityService.getAllPriorities());
-//        model.addAttribute("task", new Task(0, "Описание", Instant.now(), false, user, null));///////
+        model.addAttribute("categories", this.categoryService.getAllCategories());
         return "addTask";
     }
 
@@ -54,16 +62,19 @@ public class TaskController {
     }
 
     @PostMapping("createTask")
-    public String createTask(@RequestParam("desc") String desc, @RequestParam("priority.id") int priorityId, HttpSession httpSession) {
+    public String createTask(@RequestParam("desc") String desc,
+                             @RequestParam("priority.id") int priorityId, HttpSession httpSession) {
         Priority priority = this.priorityService.getPriorityById(priorityId).get();
-        System.out.println("CONTROLLER: " + priority);
-        User user = (User)httpSession.getAttribute("user");
-        this.taskService.addTask(new Task(0, desc, Instant.now(), false, user, priority));
+        User user = (User)httpSession.getAttribute("user"); //TODO select categories option on form !
+        this.taskService.addTask(new Task(0, desc, Instant.now(), false, user, priority, null));
         return "redirect:/tasks";
     }
 
     @GetMapping("/formTaskDetail/{taskId}")
-    public String formTaskDetail(Model model, @PathVariable("taskId") int id) {
+    public String formTaskDetail(Model model,
+                                 @PathVariable("taskId") int id,
+                                 @RequestParam(name = "success", required = false) Boolean success) {
+        model.addAttribute("success", success != null);
         Optional<Task> task = this.taskService.findTaskById(id);
         if (task.isPresent()) {
             model.addAttribute("task", task.get());
@@ -86,15 +97,19 @@ public class TaskController {
     public String updateTask(@ModelAttribute Task task, HttpSession httpSession) {
         User user = (User)httpSession.getAttribute("user");
         task.setUser(user);
-        System.out.println("CONTROLLER POST updateTask: " + task);
         this.taskService.updateTask(task);
         return "redirect:/tasks";
     }
 
     @GetMapping("/completeTask/{taskId}")
-    public String completeTask(@PathVariable("taskId") int id) {
-        this.taskService.completeTask(id);
-        return "redirect:/tasks";
+    public String completeTask(Model model, @PathVariable("taskId") int id) {
+        boolean success = this.taskService.completeTask(id);
+        String failUrl = "redirect:/formTaskDetail/" + id + "?success=false";
+        String successUrl= "redirect:/formTaskDetail/" + id + "?success=true";
+        if (success) {
+            return successUrl;
+        }
+        return failUrl;
     }
 
     @GetMapping("/deleteTask/{taskId}")

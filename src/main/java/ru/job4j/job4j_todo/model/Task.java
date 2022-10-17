@@ -3,12 +3,11 @@ package ru.job4j.job4j_todo.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Task.
@@ -38,4 +37,11 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "priority_id")
     private Priority priority;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "task_category",
+            joinColumns = {@JoinColumn(name = "task_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")}
+    )
+    private List<Category> categories = new ArrayList<>();
 }

@@ -3,8 +3,10 @@ package ru.job4j.job4j_todo.repository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.annotations.QueryHints;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.QueryHint;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -82,6 +84,11 @@ public class CrudRepository {
             }
             return sq.list();
         };
+        return tx(command);
+    }
+
+    public <T> List<T> queryDistinct(String query, Class<T> cl) {
+        Function<Session, List<T>> command = session -> session.createQuery(query, cl).setHint(QueryHints.PASS_DISTINCT_THROUGH, false).list();
         return tx(command);
     }
 }

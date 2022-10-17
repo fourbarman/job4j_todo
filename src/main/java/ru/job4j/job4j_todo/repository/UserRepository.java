@@ -37,12 +37,23 @@ public class UserRepository {
 
     /**
      * getUserByLoginAndPassword.
+     * If Exception caught than return empty Optional.
      *
      * @param login    Completed or not.
      * @param password Completed or not.
      * @return Optional of user.
      */
     public Optional<User> getUserByLoginAndPassword(String login, String password) {
-        return this.crudRepository.optional("from User where login = :fLogin and password = :fPassword", User.class, Map.of("fLogin", login, "fPassword", password));
+        Optional<User> user;
+        try {
+            user = crudRepository.optional(
+                    "from User where login = :fLogin and password = :fPassword",
+                    User.class,
+                    Map.of("fLogin", login, "fPassword", password)
+            );
+        } catch (Exception e) {
+            user = Optional.empty();
+        }
+        return user;
     }
 }

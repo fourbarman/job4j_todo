@@ -60,6 +60,9 @@
             <div class="card-header">
                 Детали задачи.
             </div>
+            <div th:if="${success}" class="alert alert-success" role="alert">
+                Задача помечена как выполненная!
+            </div>
             <div class="card-body">
                 <form th:action="@{/updateTask}" method="POST" th:object="${task}">
                     <div class="form-group">

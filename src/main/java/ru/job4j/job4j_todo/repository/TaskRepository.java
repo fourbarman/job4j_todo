@@ -26,7 +26,7 @@ public class TaskRepository {
      * @return List.
      */
     public List<Task> getAllTasks() {
-        return crudRepository.query("from Task t join fetch t.priority", Task.class);
+         return crudRepository.queryDistinct("select distinct t from Task t left join fetch t.categories join fetch t.priority", Task.class);
     }
 
     /**

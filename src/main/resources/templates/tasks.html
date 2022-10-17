@@ -74,7 +74,12 @@
             </div>
             <small class="mb-1" th:text="${'Автор: ' + task.user.username}"></small>
             <small class="text-muted" th:text="${'| Создана: ' + task.created}"> </small>
-            <small class="text-muted" th:text="${'| id: ' + task.id}"></small>
+            <small class="text-muted" th:text="${'| id: ' + task.id + ' | '}"></small>
+            <small>Категории:
+                <span th:each="category : ${task.categories}">
+                    <small th:text="${category.name}"></small>
+                </span>
+            </small>
         </a>
     </div>
 </div>

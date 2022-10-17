@@ -6,6 +6,9 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <include file="scripts/001_ddl_init_schema.sql" relativeToChangelogFile="true"/>
-    <include file="scripts/002_ddl_alter_task_with_user.sql" relativeToChangelogFile="true"/>
-    <include file="scripts/003_ddl_add_priorities_table_and_ref_to_tasks.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/002_insert_tasks_and_users.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/003_ddl_alter_task_with_user.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/004_ddl_add_priorities_table_and_ref_to_tasks.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/005_ddl_add_category_many_to_many_tasks.sql" relativeToChangelogFile="true" />
+    <include file="scripts/006_dml_insert_categories_and_task_category_and_update_task.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

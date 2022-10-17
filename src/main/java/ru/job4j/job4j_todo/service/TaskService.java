@@ -40,13 +40,14 @@ public class TaskService {
         this.taskRepository.updateTask(task);
     }
 
-    public void completeTask(int id) {
+    public boolean completeTask(int id) {
         Optional<Task> task = this.taskRepository.findTaskById(id);
-        task.ifPresent(value -> {
-            value.setDone(true);
-            this.taskRepository.updateTask(value);
-        });
-
+        if (task.isPresent()) {
+            task.get().setDone(true);
+            this.taskRepository.updateTask(task.get());
+            return true;
+        }
+        return false;
     }
 
     public void deleteTask(int id) {
