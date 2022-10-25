@@ -20,13 +20,28 @@ import java.util.Optional;
 public class TaskRepository {
     private final CrudRepository crudRepository;
 
+    private final String GET_ALL = """
+            select distinct t 
+            from Task t 
+            left join fetch 
+            t.categories 
+            join fetch 
+            t.priority
+            """;
+    private final String GET_ALL_BY_COMPLETED = """
+            select distinct t from Task t left join fetch t.categories join fetch t.priority where done = :fDone
+            """;
+    private final String FIND_TASK_BY_ID = """
+            select distinct t from Task t left join fetch t.categories join fetch t.priority where t.id = :fId
+            """;
+
     /**
      * Get all tasks.
      *
      * @return List.
      */
     public List<Task> getAllTasks() {
-         return crudRepository.queryDistinct("select distinct t from Task t left join fetch t.categories join fetch t.priority", Task.class);
+        return crudRepository.queryDistinct(GET_ALL, Task.class);
     }
 
     /**
@@ -36,7 +51,7 @@ public class TaskRepository {
      * @return List.
      */
     public List<Task> getAllByComplete(boolean completed) {
-        return crudRepository.query("from Task t join fetch t.priority where done = :fDone", Task.class, Map.of("fDone", completed));
+        return crudRepository.query(GET_ALL_BY_COMPLETED, Task.class, Map.of("fDone", completed));
     }
 
     /**
@@ -57,7 +72,7 @@ public class TaskRepository {
      * @return Found task.
      */
     public Optional<Task> findTaskById(int id) {
-        return crudRepository.optional("from Task t join fetch t.priority where t.id = :fId", Task.class, Map.of("fId", id));
+        return crudRepository.optional(FIND_TASK_BY_ID, Task.class, Map.of("fId", id));
     }
 
     /**

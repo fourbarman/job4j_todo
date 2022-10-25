@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.job4j_todo.model.Category;
 import ru.job4j.job4j_todo.model.Priority;
 import ru.job4j.job4j_todo.model.Task;
 import ru.job4j.job4j_todo.model.User;
@@ -13,8 +14,11 @@ import ru.job4j.job4j_todo.service.TaskService;
 
 import javax.servlet.http.HttpSession;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * TaskController.
@@ -38,35 +42,35 @@ public class TaskController {
 
     @GetMapping("/tasks")
     public String tasks(Model model) {
-        List<Task> list = this.taskService.getAllTasks();
+        List<Task> list = taskService.getAllTasks();
         model.addAttribute("tasks", list);
-        //List<>
-        //model.addAttribute("categories", this.categoryService.getAllCategories());
-        for (Task t : list) {
-            System.out.println(t);
-        }
         return "tasks";
     }
 
     @GetMapping("/addTask")
-    public String addTask(Model model, HttpSession httpSession) {
-        model.addAttribute("priorities", this.priorityService.getAllPriorities());
-        model.addAttribute("categories", this.categoryService.getAllCategories());
+    public String addTask(Model model) {
+        model.addAttribute("task", new Task());
+        model.addAttribute("priorities", priorityService.getAllPriorities());
+        model.addAttribute("categories", categoryService.getAllCategories());
         return "addTask";
     }
 
     @GetMapping("/completedTasks/{completed}")
-    public String completedTasks(Model model, @PathVariable("completed") boolean completed) {
-        model.addAttribute("tasks", this.taskService.getAllByComplete(completed));
+    public String completedTasks(Model model,
+                                 @PathVariable("completed") boolean completed) {
+        model.addAttribute("tasks", taskService.getAllByComplete(completed));
         return "tasks";
     }
 
     @PostMapping("createTask")
     public String createTask(@RequestParam("desc") String desc,
-                             @RequestParam("priority.id") int priorityId, HttpSession httpSession) {
-        Priority priority = this.priorityService.getPriorityById(priorityId).get();
-        User user = (User)httpSession.getAttribute("user"); //TODO select categories option on form !
-        this.taskService.addTask(new Task(0, desc, Instant.now(), false, user, priority, null));
+                             @RequestParam("priority.id") int priorityId,
+                             @RequestParam(defaultValue = "1") List<Integer> categories,
+                             HttpSession httpSession) {
+        User user = (User)httpSession.getAttribute("user");
+        Priority priority = priorityService.getPriorityById(priorityId).get();
+        List<Category> cats = categoryService.getAllCategories().stream().filter(cat -> categories.contains(cat.getId())).toList();
+        taskService.addTask(new Task(0, desc, Instant.now(), false, user, priority, cats));
         return "redirect:/tasks";
     }
 
@@ -75,35 +79,44 @@ public class TaskController {
                                  @PathVariable("taskId") int id,
                                  @RequestParam(name = "success", required = false) Boolean success) {
         model.addAttribute("success", success != null);
-        Optional<Task> task = this.taskService.findTaskById(id);
+        Optional<Task> task = taskService.findTaskById(id);
         if (task.isPresent()) {
             model.addAttribute("task", task.get());
+            model.addAttribute("categories", task.get().getCategories());
         }
         return "taskDetails";
     }
 
     @GetMapping("/formUpdateTask/{taskId}")
     public String formUpdateTask(Model model, @PathVariable("taskId") int id) {
-        Optional<Task> task = this.taskService.findTaskById(id);
-        List<Priority> priorities = this.priorityService.getAllPriorities();
+        Optional<Task> task = taskService.findTaskById(id);
+        List<Priority> priorities = priorityService.getAllPriorities();
+        List<Category> categories = categoryService.getAllCategories();
         if (task.isPresent()) {
             model.addAttribute("task", task.get());
             model.addAttribute("priorities", priorities);
+            model.addAttribute("categories", categories);
         }
         return "updateTask";
     }
 
     @PostMapping("updateTask")
-    public String updateTask(@ModelAttribute Task task, HttpSession httpSession) {
-        User user = (User)httpSession.getAttribute("user");
-        task.setUser(user);
-        this.taskService.updateTask(task);
+    public String updateTask(@RequestParam("id") int id,
+                             @RequestParam("description") String desc,
+                             @RequestParam("priority.id") int priorityId,
+                             @RequestParam(defaultValue = "1") List<Integer> categories) {
+        List<Category> cats = categoryService.getAllCategories().stream().filter(cat -> categories.contains(cat.getId())).toList();
+        Task task = taskService.findTaskById(id).get();
+        task.setDescription(desc);
+        task.setPriority(priorityService.getPriorityById(priorityId).get());
+        task.setCategories(cats);
+        taskService.updateTask(task);
         return "redirect:/tasks";
     }
 
     @GetMapping("/completeTask/{taskId}")
-    public String completeTask(Model model, @PathVariable("taskId") int id) {
-        boolean success = this.taskService.completeTask(id);
+    public String completeTask(@PathVariable("taskId") int id) {
+        boolean success = taskService.completeTask(id);
         String failUrl = "redirect:/formTaskDetail/" + id + "?success=false";
         String successUrl= "redirect:/formTaskDetail/" + id + "?success=true";
         if (success) {
@@ -114,7 +127,7 @@ public class TaskController {
 
     @GetMapping("/deleteTask/{taskId}")
     public String deleteTask(@PathVariable("taskId") int id) {
-        this.taskService.deleteTask(id);
+        taskService.deleteTask(id);
         return "redirect:/tasks";
     }
 }

@@ -80,6 +80,11 @@
                         <label for="priority">Приоритет</label>
                         <input type="text" class="form-control" name="priority" id="priority" th:field="*{priority.name}"
                                readonly>
+                        <span>Категории:</span>
+                        <span th:each="category : ${categories}">
+                            <span th:text="${'|' + category.name + '|'}">
+                            </span>
+                        </span>
                         <div th:if="*{!done}">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="uncompleted" disabled>

@@ -61,26 +61,38 @@
                 Редактирование задачи.
             </div>
             <div class="card-body">
-                <form th:action="@{/updateTask}" method="POST" th:object="${task}" enctype="multipart/form-data">
+                <form th:action="@{/updateTask}" method="POST">
                     <div class="form-group">
-                        <label for="id">id</label>
-                        <input type="text" class="form-control" name="id" id="id" th:field="*{id}" readonly/>
-                        <label for="description">Описание</label>
-                        <input type="text" class="form-control" name="description" id="description" th:field="*{description}">
-                        <label for="created">Дата создания</label>
-                        <input type="text" class="form-control" name="created" id="created" th:field="*{created}" readonly>
-                        <input type="hidden" name="id" th:field="*{user.id}"/>
-                        <label for="username">Автор</label>
-                        <input type="text" class="form-control" name="username" id="username" th:field="*{user.username}"
-                               readonly>
-                        <div class=form-group>
-                            <label for="priority.id">Приоритет</label>
-                            <select class="form-control" id="priority.id" name="priority.id">
-                                <option th:each="priority : ${priorities}" th:value="${priority.id}" th:text="${priority.name}"></option>
-                            </select>
+                        <div th:object="${task}">
+                            <label for="id">id</label>
+                            <input type="text" class="form-control" name="id" id="id" th:field="*{id}" readonly/>
+                            <label for="description">Описание</label>
+                            <input type="text" class="form-control" name="description" id="description"
+                                   th:field="*{description}">
+                            <label for="created">Дата создания</label>
+                            <input type="text" class="form-control" name="created" id="created" th:field="*{created}"
+                                   readonly>
+                            <input type="hidden" name="id" th:field="*{user.id}"/>
+                            <label for="username">Автор</label>
+                            <input type="text" class="form-control" name="username" id="username"
+                                   th:field="*{user.username}"
+                                   readonly>
                         </div>
-                        <label for="description">Задача выполнена</label>
-                        <input type="text" class="form-control" name="done" id="done" th:field="*{done}" readonly>
+                        <label for="priority.id">Приоритет</label>
+                        <select class="form-control" id="priority.id" name="priority.id">
+                            <option th:each="priority : ${priorities}" th:value="${priority.id}"
+                                    th:text="${priority.name}" th:selected="${priority == task.priority}"></option>
+                        </select>
+                        <label for="categories">Категории</label>
+                        <select multiple class="custom-select" size="8" id="categories" name="categories" required>
+                            <option th:each="category : ${categories}"
+                                    th:value="${category.id}"
+                                    th:text="${category.name}"
+                                    th:selected="${task.categories.contains(category)}"></option>
+                        </select>
+
+                        <label for="done">Задача выполнена</label>
+                        <input type="text" class="form-control" name="done" id="done" th:field="${task.done}" readonly>
                     </div>
                     <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
                 </form>

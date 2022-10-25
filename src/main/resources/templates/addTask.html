@@ -61,25 +61,30 @@
                 Новая задача.
             </div>
             <div class="card-body">
-                <form th:action="@{createTask}" method="POST" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <input type="hidden" name="id" value="0"/>
-                        <label for="desc">Описание</label>
-                        <input type="text" class="form-control" name="desc" id="desc">
-                        <div class=form-group>
-                            <label for="category.id"></label>
-                            <select multiple class="form-control" id="category.id" name="category.id">
-                                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                <form th:action="@{createTask}" method="POST">
+                    <div class="container">
+                        <div class="form-group">
+
+                            <label for="desc">Описание</label>
+                            <input type="text" class="form-control" name="desc" id="desc" required>
+
+                            <div class="form-group">
+                                <label for="priority.id">Приоритет</label>
+                                <select class="form-control" id="priority.id" name="priority.id" required>
+                                    <option th:each="priority : ${priorities}"
+                                            th:value="${priority.id}"
+                                            th:text="${priority.name}"></option>
+                                </select>
+                            </div>
+
+                            <label for="categories">Категории</label>
+                            <select multiple class="custom-select" size="8" id="categories" name="categories" required>
+                                <option th:each="category : ${categories}" th:value="${category.id}"
+                                        th:text="${category.name}"></option>
                             </select>
                         </div>
-                        <div class=form-group>
-                            <label for="priority.id">Приоритет</label>
-                            <select class="form-control" id="priority.id" name="priority.id">
-                                <option th:each="priority : ${priorities}" th:value="${priority.id}" th:text="${priority.name}"></option>
-                            </select>
-                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
                 </form>
             </div>
         </div>
