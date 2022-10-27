@@ -6,7 +6,6 @@ import ru.job4j.job4j_todo.model.Category;
 import ru.job4j.job4j_todo.repository.CategoryRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -17,7 +16,7 @@ public class CategoryService {
         return categoryRepository.getAllCategories();
     }
 
-    public Optional<Category> findCategoryById(int id) {
-        return categoryRepository.findCategoryById(id);
+    public List<Category> getCategoryListByIds(List<Integer> ids) {
+        return categoryRepository.getCategoryListById(ids);
     }
 }

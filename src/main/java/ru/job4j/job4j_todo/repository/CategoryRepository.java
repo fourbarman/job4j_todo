@@ -6,7 +6,6 @@ import ru.job4j.job4j_todo.model.Category;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * CategoryRepository.
@@ -30,12 +29,12 @@ public class CategoryRepository {
     }
 
     /**
-     * Find category by id.
+     * Get category list by list of ids.
      *
-     * @param id Category id.
-     * @return Optional.
+     * @param ids List of id.
+     * @return Category list.
      */
-    public Optional<Category> findCategoryById(int id) {
-        return crudRepository.optional("from Category where id = :fId", Category.class, Map.of("fId", id));
+    public List<Category> getCategoryListById(List<Integer> ids) {
+        return crudRepository.query("from Category c where c.id in (:fIds)", Category.class, Map.of("fIds", ids));
     }
 }

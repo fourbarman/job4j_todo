@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import ru.job4j.job4j_todo.model.Category;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -35,14 +34,13 @@ public class CategoryRepositoryTest {
         assertThat(categories.size()).isEqualTo(8);
     }
 
+
     /**
-     * Test findCategoryById when find category by id than return found category and success.
+     * Test whenGetCategoryListByIds when get Category list by ids than return list of found Categories.
      */
     @Test
-    public void whenFindCategoryById() {
-        Category stored = categoryRepository.getAllCategories().get(0);
-        Optional<Category> found = categoryRepository.findCategoryById(stored.getId());
-        assertThat(found).isPresent();
-        assertThat(found.get()).isEqualTo(stored);
+    public void whenGetCategoryListByIds() {
+        List<Category> cats = categoryRepository.getCategoryListById(List.of(1, 3, 5));
+        assertThat(cats.size()).isEqualTo(3);
     }
 }

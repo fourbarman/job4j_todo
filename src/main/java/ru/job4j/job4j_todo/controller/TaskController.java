@@ -14,11 +14,8 @@ import ru.job4j.job4j_todo.service.TaskService;
 
 import javax.servlet.http.HttpSession;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * TaskController.
@@ -65,11 +62,11 @@ public class TaskController {
     @PostMapping("createTask")
     public String createTask(@RequestParam("desc") String desc,
                              @RequestParam("priority.id") int priorityId,
-                             @RequestParam(defaultValue = "1") List<Integer> categories,
+                             @RequestParam List<Integer> categories,
                              HttpSession httpSession) {
         User user = (User)httpSession.getAttribute("user");
         Priority priority = priorityService.getPriorityById(priorityId).get();
-        List<Category> cats = categoryService.getAllCategories().stream().filter(cat -> categories.contains(cat.getId())).toList();
+        List<Category> cats = categoryService.getCategoryListByIds(categories);
         taskService.addTask(new Task(0, desc, Instant.now(), false, user, priority, cats));
         return "redirect:/tasks";
     }
@@ -104,8 +101,8 @@ public class TaskController {
     public String updateTask(@RequestParam("id") int id,
                              @RequestParam("description") String desc,
                              @RequestParam("priority.id") int priorityId,
-                             @RequestParam(defaultValue = "1") List<Integer> categories) {
-        List<Category> cats = categoryService.getAllCategories().stream().filter(cat -> categories.contains(cat.getId())).toList();
+                             @RequestParam List<Integer> categories) {
+        List<Category> cats = categoryService.getCategoryListByIds(categories);
         Task task = taskService.findTaskById(id).get();
         task.setDescription(desc);
         task.setPriority(priorityService.getPriorityById(priorityId).get());

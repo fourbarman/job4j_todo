@@ -128,7 +128,7 @@ public class TaskControllerTest {
         PriorityService priorityService = mock(PriorityService.class);
         when(priorityService.getPriorityById(1)).thenReturn(Optional.of(priority));
         CategoryService categoryService = mock(CategoryService.class);
-        when(categoryService.getAllCategories()).thenReturn(categories);
+        when(categoryService.getCategoryListByIds(List.of(1, 2))).thenReturn(categories);
         TaskService taskService = mock(TaskService.class);
         TaskController taskController = new TaskController(taskService, priorityService, categoryService);
         String page = taskController.createTask("description", 1, List.of(1), httpSession);
@@ -185,19 +185,16 @@ public class TaskControllerTest {
         CategoryService categoryService = mock(CategoryService.class);
         Task task = new Task();
         Priority priority = new Priority();
-        Category cat1 = new Category(1, "cat1");
-        Category cat2 = new Category(2, "cat2");
-        List<Category> categories = List.of(cat1, cat2);
+        List<Category> categories = List.of(new Category(), new Category());
         when(taskService.findTaskById(anyInt())).thenReturn(Optional.of(task));
         when(priorityService.getPriorityById(1)).thenReturn(Optional.of(priority));
-        when(categoryService.getAllCategories()).thenReturn(categories);
+        when(categoryService.getCategoryListByIds(List.of(1, 2))).thenReturn(categories);
         TaskController taskController = new TaskController(taskService, priorityService, categoryService);
         String desc = "desc";
-        String page = taskController.updateTask(1, desc, 1, List.of(1));
+        String page = taskController.updateTask(1, desc, 1, List.of(1, 2));
         assertThat(page).isEqualTo("redirect:/tasks");
         assertThat(task.getDescription()).isEqualTo(desc);
-        assertThat(task.getCategories().size()).isEqualTo(1);
-        assertThat(task.getCategories().get(0)).isEqualTo(cat1);
+        assertThat(task.getCategories().size()).isEqualTo(2);
     }
 
     /**
