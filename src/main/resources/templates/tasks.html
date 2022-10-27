@@ -55,6 +55,9 @@
             </ul>
         </form>
     </div>
+    <div th:if="${notFound}" class="alert alert-danger" role="alert">
+        Задачи с таким Id не существует!
+    </div>
     <div class="list-group" th:each="task: ${tasks}">
         <a th:href="@{|/formTaskDetail/${task.id}|}"
            class="list-group-item list-group-item-action flex-column align-items-start">

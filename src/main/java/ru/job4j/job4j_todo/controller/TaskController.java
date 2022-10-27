@@ -15,6 +15,7 @@ import ru.job4j.job4j_todo.service.TaskService;
 import javax.servlet.http.HttpSession;
 import java.time.Instant;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
@@ -38,7 +39,9 @@ public class TaskController {
     }
 
     @GetMapping("/tasks")
-    public String tasks(Model model) {
+    public String tasks(Model model,
+                        @RequestParam(name = "notFound", required = false) Boolean notFound) {
+        model.addAttribute("notFound", notFound != null);
         List<Task> list = taskService.getAllTasks();
         model.addAttribute("tasks", list);
         return "tasks";
@@ -65,7 +68,9 @@ public class TaskController {
                              @RequestParam List<Integer> categories,
                              HttpSession httpSession) {
         User user = (User)httpSession.getAttribute("user");
-        Priority priority = priorityService.getPriorityById(priorityId).get();
+        Priority priority = priorityService.getPriorityById(priorityId).orElseThrow(
+                () -> new NoSuchElementException("Priority id: " + priorityId)
+        );
         List<Category> cats = categoryService.getCategoryListByIds(categories);
         taskService.addTask(new Task(0, desc, Instant.now(), false, user, priority, cats));
         return "redirect:/tasks";
@@ -87,13 +92,14 @@ public class TaskController {
     @GetMapping("/formUpdateTask/{taskId}")
     public String formUpdateTask(Model model, @PathVariable("taskId") int id) {
         Optional<Task> task = taskService.findTaskById(id);
+        if (task.isEmpty()) {
+            return "redirect:/tasks?notFound=false";
+        }
         List<Priority> priorities = priorityService.getAllPriorities();
         List<Category> categories = categoryService.getAllCategories();
-        if (task.isPresent()) {
-            model.addAttribute("task", task.get());
-            model.addAttribute("priorities", priorities);
-            model.addAttribute("categories", categories);
-        }
+        model.addAttribute("task", task.get());
+        model.addAttribute("priorities", priorities);
+        model.addAttribute("categories", categories);
         return "updateTask";
     }
 
@@ -103,9 +109,14 @@ public class TaskController {
                              @RequestParam("priority.id") int priorityId,
                              @RequestParam List<Integer> categories) {
         List<Category> cats = categoryService.getCategoryListByIds(categories);
-        Task task = taskService.findTaskById(id).get();
+        Task task = taskService.findTaskById(id).orElseThrow(
+                () -> new NoSuchElementException("Task id: " + id)
+        );
+        Priority priority = priorityService.getPriorityById(priorityId).orElseThrow(
+                () -> new NoSuchElementException("Priority id: " + priorityId)
+        );
+        task.setPriority(priority);
         task.setDescription(desc);
-        task.setPriority(priorityService.getPriorityById(priorityId).get());
         task.setCategories(cats);
         taskService.updateTask(task);
         return "redirect:/tasks";

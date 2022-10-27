@@ -55,7 +55,7 @@ public class TaskControllerTest {
         CategoryService categoryService = mock(CategoryService.class);
         when(taskService.getAllTasks()).thenReturn(tasks);
         TaskController taskController = new TaskController(taskService, priorityService, categoryService);
-        String page = taskController.tasks(model);
+        String page = taskController.tasks(model, true);
         verify(model).addAttribute("tasks", tasks);
         assertThat(page).isEqualTo("tasks");
     }
