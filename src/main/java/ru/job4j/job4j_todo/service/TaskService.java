@@ -2,11 +2,17 @@ package ru.job4j.job4j_todo.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.job4j.job4j_todo.model.Category;
+import ru.job4j.job4j_todo.model.Priority;
 import ru.job4j.job4j_todo.model.Task;
+import ru.job4j.job4j_todo.model.User;
 import ru.job4j.job4j_todo.repository.TaskRepository;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * TaskService.
@@ -20,16 +26,18 @@ import java.util.Optional;
 public class TaskService {
     private final TaskRepository taskRepository;
 
-    public List<Task> getAllTasks() {
-        return this.taskRepository.getAllTasks();
+    public List<Task> getAllTasks(User user) {
+        List<Task> tasks = taskRepository.getAllTasks();
+        taskRepository.getAllTasks().forEach(t -> t.setCreated(t.getCreated().atZone(ZoneId.of(user.getTimezone())).toLocalDateTime()));
+        return tasks;
     }
 
     public List<Task> getAllByComplete(boolean completed) {
         return this.taskRepository.getAllByComplete(completed);
     }
 
-    public Task addTask(Task newTask) {
-        return this.taskRepository.addTask(newTask);
+    public Task addTask(String description, User user, Priority priority, List<Category> categories) {
+        return taskRepository.addTask(new Task(0, description, LocalDateTime.now(), false, user, priority, categories));
     }
 
     public Optional<Task> findTaskById(int id) {

@@ -42,7 +42,7 @@ public class UserControllerTest {
     @Test
     public void whenLogin() {
         UserService userService = mock(UserService.class);
-        User user = new User(1, "username", "login", "pass");
+        User user = new User(1, "username", "login", "pass", "UTC");
         when(userService.getUserByLoginAndPassword(user.getLogin(), user.getPassword()))
                 .thenReturn(Optional.of(user));
         HttpServletRequest req = mock(HttpServletRequest.class);
@@ -58,7 +58,7 @@ public class UserControllerTest {
     @Test
     public void whenLoginWithInvalidLoginPass() {
         UserService userService = mock(UserService.class);
-        User user = new User(1, "username", "login", "pass");
+        User user = new User(1, "username", "login", "pass", "UTC");
         when(userService.getUserByLoginAndPassword("invalid login", "invalid pass"))
                 .thenReturn(Optional.of(user));
         HttpServletRequest req = mock(HttpServletRequest.class);
@@ -89,7 +89,7 @@ public class UserControllerTest {
     public void whenRegisterSuccess() {
         Model model = mock(Model.class);
         UserService userService = mock(UserService.class);
-        User user = new User(1, "username", "login", "pass");
+        User user = new User(1, "username", "login", "pass", "UTC");
         when(userService.addUser(user)).thenReturn(Optional.of(user));
         HttpServletRequest req = mock(HttpServletRequest.class);
         HttpSession session = new MockHttpSession();
@@ -106,7 +106,7 @@ public class UserControllerTest {
     public void whenRegisterFail() {
         Model model = mock(Model.class);
         UserService userService = mock(UserService.class);
-        User user = new User(1, "username", "login", "pass");
+        User user = new User(1, "username", "login", "pass", "UTC");
         when(userService.addUser(user)).thenReturn(Optional.empty());
         HttpServletRequest req = mock(HttpServletRequest.class);
         HttpSession session = new MockHttpSession();

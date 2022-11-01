@@ -13,7 +13,6 @@ import ru.job4j.job4j_todo.service.PriorityService;
 import ru.job4j.job4j_todo.service.TaskService;
 
 import javax.servlet.http.HttpSession;
-import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -40,9 +39,11 @@ public class TaskController {
 
     @GetMapping("/tasks")
     public String tasks(Model model,
-                        @RequestParam(name = "notFound", required = false) Boolean notFound) {
+                        @RequestParam(name = "notFound", required = false) Boolean notFound,
+                        HttpSession httpSession) {
         model.addAttribute("notFound", notFound != null);
-        List<Task> list = taskService.getAllTasks();
+        User user = (User)httpSession.getAttribute("user");
+        List<Task> list = taskService.getAllTasks(user);
         model.addAttribute("tasks", list);
         return "tasks";
     }
@@ -72,7 +73,7 @@ public class TaskController {
                 () -> new NoSuchElementException("Priority id: " + priorityId)
         );
         List<Category> cats = categoryService.getCategoryListByIds(categories);
-        taskService.addTask(new Task(0, desc, Instant.now(), false, user, priority, cats));
+        taskService.addTask(desc, user, priority, cats);
         return "redirect:/tasks";
     }
 

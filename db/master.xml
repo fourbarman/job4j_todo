@@ -11,4 +11,6 @@
     <include file="scripts/004_ddl_add_priorities_table_and_ref_to_tasks.sql" relativeToChangelogFile="true"/>
     <include file="scripts/005_ddl_add_category_many_to_many_tasks.sql" relativeToChangelogFile="true" />
     <include file="scripts/006_dml_insert_categories_and_task_category_and_update_task.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/007_ddl_users_add_time_zone.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/008_ddl_tasks_change_column_created_wo_timezone.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

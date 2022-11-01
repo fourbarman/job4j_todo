@@ -10,7 +10,7 @@ import ru.job4j.job4j_todo.model.Priority;
 import ru.job4j.job4j_todo.model.Task;
 import ru.job4j.job4j_todo.model.User;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +35,7 @@ public class TaskRepositoryTest {
     @Test
     public void whenGelAll() {
         Task stored = taskRepository.getAllTasks().get(0);
-        Instant created = stored.getCreated();
+        LocalDateTime created = stored.getCreated();
         User user = stored.getUser();
         Priority priority = stored.getPriority();
         List<Category> categories = stored.getCategories();
@@ -67,7 +67,7 @@ public class TaskRepositoryTest {
     public void whenAddNewTaskThanSuccess() {
         String description = "description";
         Task stored = taskRepository.getAllTasks().get(0);
-        Instant created = stored.getCreated();
+        LocalDateTime created = stored.getCreated();
         User user = stored.getUser();
         Priority priority = stored.getPriority();
         List<Category> categories = stored.getCategories();
@@ -117,7 +117,7 @@ public class TaskRepositoryTest {
     public void whenDeleteTask() {
         String description = "description";
         Task stored = taskRepository.getAllTasks().get(0);
-        Instant created = stored.getCreated();
+        LocalDateTime created = stored.getCreated();
         User user = stored.getUser();
         Priority priority = stored.getPriority();
         List<Category> categories = stored.getCategories();

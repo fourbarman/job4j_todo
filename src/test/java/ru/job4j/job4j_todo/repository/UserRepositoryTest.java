@@ -28,7 +28,7 @@ public class UserRepositoryTest {
      */
     @Test
     public void whenAddUserThanSuccess() {
-        User user = new User(0, "testUser1", "testLogin1", "testPass1");
+        User user = new User(0, "testUser1", "testLogin1", "testPass1", "UTC");
         Optional<User> addedUser = userRepository.addUser(user);
         assertThat(addedUser).isPresent();
         assertThat(addedUser.get().getUsername()).isEqualTo(user.getUsername());
@@ -39,8 +39,8 @@ public class UserRepositoryTest {
      */
     @Test
     public void whenGetUserByLoginAndPassword() {
-        User user2 = new User(0, "testUser2", "testLogin2", "testPass2");
-        User user3 = new User(0, "testUser3", "testLogin3", "testPass3");
+        User user2 = new User(0, "testUser2", "testLogin2", "testPass2", "UTC");
+        User user3 = new User(0, "testUser3", "testLogin3", "testPass3", "UTC");
         userRepository.addUser(user2);
         userRepository.addUser(user3);
         Optional<User> addedUser2 = userRepository.getUserByLoginAndPassword(user2.getLogin(), user2.getPassword());
@@ -57,7 +57,7 @@ public class UserRepositoryTest {
      */
     @Test
     public void whenAddSameUserThanReturnEmptyAndSuccess() {
-        User user = new User(0, "testUser1", "testLogin1", "testPass1");
+        User user = new User(0, "testUser1", "testLogin1", "testPass1", "UTC");
         Optional<User> addedUser = userRepository.addUser(user);
         assertThat(addedUser).isEmpty();
     }

@@ -1,6 +1,7 @@
 package ru.job4j.job4j_todo.controller;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.ui.Model;
 import ru.job4j.job4j_todo.model.Category;
 import ru.job4j.job4j_todo.model.Priority;
@@ -11,7 +12,7 @@ import ru.job4j.job4j_todo.service.PriorityService;
 import ru.job4j.job4j_todo.service.TaskService;
 
 import javax.servlet.http.HttpSession;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,17 +47,17 @@ public class TaskControllerTest {
     @Test
     public void whenTasksThanModelHasTaskListAndReturnTasksPage() {
         List<Task> tasks = List.of(
-                new Task(1, "desc1", Instant.now(), false, new User(), new Priority(), List.of(new Category(), new Category())),
-                new Task(2, "desc2", Instant.now(), false, new User(), new Priority(), List.of(new Category(), new Category()))
+                new Task(1, "desc1", LocalDateTime.now(), false, new User(), new Priority(), List.of(new Category(), new Category())),
+                new Task(2, "desc2", LocalDateTime.now(), false, new User(), new Priority(), List.of(new Category(), new Category()))
         );
         Model model = mock(Model.class);
         TaskService taskService = mock(TaskService.class);
+        HttpSession httpSession = new MockHttpSession();
         PriorityService priorityService = mock(PriorityService.class);
         CategoryService categoryService = mock(CategoryService.class);
-        when(taskService.getAllTasks()).thenReturn(tasks);
+        when(taskService.getAllTasks(new User())).thenReturn(tasks);
         TaskController taskController = new TaskController(taskService, priorityService, categoryService);
-        String page = taskController.tasks(model, true);
-        verify(model).addAttribute("tasks", tasks);
+        String page = taskController.tasks(model, true, httpSession);
         assertThat(page).isEqualTo("tasks");
     }
 
