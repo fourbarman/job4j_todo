@@ -33,7 +33,7 @@ public class UserControllerTest {
         UserController userController = new UserController(userService);
         boolean fail = true;
         String page = userController.loginPage(model, fail);
-        assertThat(page).isEqualTo("login");
+        assertThat(page).isEqualTo("/users/login");
     }
 
     /**
@@ -66,7 +66,7 @@ public class UserControllerTest {
         when(req.getSession()).thenReturn(session);
         UserController userController = new UserController(userService);
         String page = userController.login(user, req);
-        assertThat(page).isEqualTo("redirect:/loginPage?fail=true");
+        assertThat(page).isEqualTo("redirect:/users/loginPage?fail=true");
     }
 
     /**
@@ -79,7 +79,7 @@ public class UserControllerTest {
         UserController userController = new UserController(userService);
         boolean fail = true;
         String page = userController.registerForm(model, fail);
-        assertThat(page).isEqualTo("register");
+        assertThat(page).isEqualTo("/users/register");
     }
 
     /**
@@ -113,7 +113,7 @@ public class UserControllerTest {
         when(req.getSession()).thenReturn(session);
         UserController userController = new UserController(userService);
         String page = userController.register(user, req);
-        assertThat(page).isEqualTo("redirect:/register?fail=true");
+        assertThat(page).isEqualTo("redirect:/users/register?fail=true");
     }
     /**
      * Test logout when logout than redirect to loginPage.
@@ -125,6 +125,6 @@ public class UserControllerTest {
         httpSession.setAttribute("user", "user");
         UserController userController = new UserController(userService);
         String page = userController.logout(httpSession);
-        assertThat(page).isEqualTo("redirect:/loginPage");
+        assertThat(page).isEqualTo("redirect:/users/loginPage");
     }
 }

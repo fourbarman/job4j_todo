@@ -32,7 +32,7 @@
                 <div th:if="${fail}" class="alert alert-danger" role="alert">
                     Пользователь с таким логином уже зарегистрирован!
                 </div>
-                <form th:action="@{register}" method="POST">
+                <form th:action="@{/users/register}" method="POST">
                     <div class="form-group">
                         <label>Имя пользователя</label>
                         <input type="text" class="form-control" name="username" required>
@@ -40,9 +40,14 @@
                         <input type="text" class="form-control" name="login" required>
                         <label>Пароль</label>
                         <input type="text" class="form-control" name="password" required>
+                        <label>Часовой пояс</label>
+                        <select class="form-control" name="timezone">
+                            <option th:each="tz : ${timezones}" th:value="${tz.getID()}"
+                                    th:text="${tz.getID() + ' : ' + tz.getDisplayName()}"></option>
+                        </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
-                    <a class="btn btn-primary" th:href="@{/index}" role="button">На главную</a>
+                    <a class="btn btn-primary" th:href="@{/users/index}" role="button">На главную</a>
                 </form>
             </div>
         </div>

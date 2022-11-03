@@ -24,7 +24,7 @@
 <body>
 <div class="container">
     <div class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" th:href="@{/tasks}">Todo</a>
+        <a class="navbar-brand" th:href="@{/tasks/tasks}">Todo</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -32,22 +32,22 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="btn btn-outline-light my-2 my-sm-0" th:href="@{/addTask}" role="button">Новая задача</a>
+                <a class="btn btn-outline-light my-2 my-sm-0" th:href="@{/tasks/addTask}" role="button">Новая задача</a>
             </div>
         </div>
         <form class="form-inline">
             <ul class="navbar-nav mr-auto">
                 <li>
-                    <a class="nav-item nav-link" th:href="@{/tasks}">Все задачи</a>
+                    <a class="nav-item nav-link" th:href="@{/tasks/tasks}">Все задачи</a>
                 </li>
                 <li>
-                    <a class="nav-item nav-link" th:href="@{/completedTasks/true}">Выполненные</a>
+                    <a class="nav-item nav-link" th:href="@{/tasks/completedTasks/true}">Выполненные</a>
                 </li>
                 <li>
-                    <a class="nav-item nav-link" th:href="@{/completedTasks/false}">Новые</a>
+                    <a class="nav-item nav-link" th:href="@{/tasks/completedTasks/false}">Новые</a>
                 </li>
                 <li>
-                    <a class="nav-item nav-link" th:if="${user.username != 'Гость'}" th:href="@{/logout}">
+                    <a class="nav-item nav-link" th:if="${user.username != 'Гость'}" th:href="@{/users/logout}">
                         <span th:text="${user.username}"></span>
                         <span> | Выйти</span>
                     </a>
@@ -55,39 +55,35 @@
             </ul>
         </form>
     </div>
-    <div class="row">
-        <div class="card" style="width: 100%">
-            <div class="card-header">
-                Новая задача.
+    <div th:if="${notFound}" class="alert alert-danger" role="alert">
+        Задачи с таким Id не существует!
+    </div>
+    <div class="list-group" th:each="task: ${tasks}">
+        <a th:href="@{|/tasks/formTaskDetail/${task.id}|}"
+           class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex mr-auto p-2 bd-highlight">
+                <div class="mr-auto p-2 bd-highlight">
+                    <h5 class="mb-1" th:text="${task.description}"></h5>
+                </div>
+                <div class="p-2 bd-highlight">
+                    <small class="mb-1" th:text="${task.priority.name}"></small>
+                    <span th:if="${!task.done}">
+                            <small class="text-success">Новая</small>
+                        </span>
+                    <span th:if="${task.done}">
+                            <small class="text-muted">Завершена</small>
+                        </span>
+                </div>
             </div>
-            <div class="card-body">
-                <form th:action="@{createTask}" method="POST">
-                    <div class="container">
-                        <div class="form-group">
-
-                            <label for="desc">Описание</label>
-                            <input type="text" class="form-control" name="desc" id="desc" required>
-
-                            <div class="form-group">
-                                <label for="priority.id">Приоритет</label>
-                                <select class="form-control" id="priority.id" name="priority.id" required>
-                                    <option th:each="priority : ${priorities}"
-                                            th:value="${priority.id}"
-                                            th:text="${priority.name}"></option>
-                                </select>
-                            </div>
-
-                            <label for="categories">Категории</label>
-                            <select multiple class="custom-select" size="8" id="categories" name="categories" required>
-                                <option th:each="category : ${categories}" th:value="${category.id}"
-                                        th:text="${category.name}"></option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+            <small class="mb-1" th:text="${'Автор: ' + task.user.username}"></small>
+            <small class="text-muted" th:text="${#temporals.format(task.created, 'dd-MM-yyyy HH:mm')}"></small>
+            <small class="text-muted" th:text="${'| id: ' + task.id + ' | '}"></small>
+            <small>Категории:
+                <span th:each="category : ${task.categories}">
+                    <small th:text="${category.name}"></small>
+                </span>
+            </small>
+        </a>
     </div>
 </div>
 </div>

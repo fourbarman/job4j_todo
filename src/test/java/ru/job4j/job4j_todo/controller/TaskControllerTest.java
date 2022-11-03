@@ -38,7 +38,7 @@ public class TaskControllerTest {
         CategoryService categoryService = mock(CategoryService.class);
         TaskController taskController = new TaskController(taskService, priorityService, categoryService);
         String page = taskController.index();
-        assertThat(page).isEqualTo("redirect:/tasks");
+        assertThat(page).isEqualTo("redirect:/tasks/tasks");
     }
 
     /**
@@ -58,7 +58,7 @@ public class TaskControllerTest {
         when(taskService.getAllTasks(new User())).thenReturn(tasks);
         TaskController taskController = new TaskController(taskService, priorityService, categoryService);
         String page = taskController.tasks(model, true, httpSession);
-        assertThat(page).isEqualTo("tasks");
+        assertThat(page).isEqualTo("/tasks/tasks");
     }
 
     /**
@@ -79,7 +79,7 @@ public class TaskControllerTest {
         verify(model).addAttribute("priorities", priorityList);
         verify(model).addAttribute("categories", categoryList);
         verify(model).addAttribute("task", new Task());
-        assertThat(page).isEqualTo("addTask");
+        assertThat(page).isEqualTo("/tasks/addTask");
     }
 
     /**
@@ -96,11 +96,11 @@ public class TaskControllerTest {
         TaskController taskController = new TaskController(taskService, priorityService, categoryService);
         String completedPage = taskController.completedTasks(model, true);
         verify(model).addAttribute("tasks", completedTasks);
-        assertThat(completedPage).isEqualTo("tasks");
+        assertThat(completedPage).isEqualTo("/tasks/tasks");
     }
 
     /**
-     * Test completedTasks when completedTasks with false than model has uncompleted task list and return taksks page.
+     * Test completedTasks when completedTasks with false than model has uncompleted task list and return tasks page.
      */
     @Test
     public void whenCompletedTasksAndFalseThanReturnUncompletedTasksAndReturnTasksPage() {
@@ -113,7 +113,7 @@ public class TaskControllerTest {
         TaskController taskController = new TaskController(taskService, priorityService, categoryService);
         String openedPage = taskController.completedTasks(model, false);
         verify(model).addAttribute("tasks", uncompletedTasks);
-        assertThat(openedPage).isEqualTo("tasks");
+        assertThat(openedPage).isEqualTo("/tasks/tasks");
     }
 
     /**
@@ -133,7 +133,7 @@ public class TaskControllerTest {
         TaskService taskService = mock(TaskService.class);
         TaskController taskController = new TaskController(taskService, priorityService, categoryService);
         String page = taskController.createTask("description", 1, List.of(1), httpSession);
-        assertThat(page).isEqualTo("redirect:/tasks");
+        assertThat(page).isEqualTo("redirect:/tasks/tasks");
     }
 
     /**
@@ -151,7 +151,7 @@ public class TaskControllerTest {
         String page = taskController.formTaskDetail(model, 1, true);
         verify(model).addAttribute("success", true);
         verify(model).addAttribute("task", task);
-        assertThat(page).isEqualTo("taskDetails");
+        assertThat(page).isEqualTo("/tasks/taskDetails");
     }
 
     /**
@@ -193,7 +193,7 @@ public class TaskControllerTest {
         TaskController taskController = new TaskController(taskService, priorityService, categoryService);
         String desc = "desc";
         String page = taskController.updateTask(1, desc, 1, List.of(1, 2));
-        assertThat(page).isEqualTo("redirect:/tasks");
+        assertThat(page).isEqualTo("redirect:/tasks/tasks");
         assertThat(task.getDescription()).isEqualTo(desc);
         assertThat(task.getCategories().size()).isEqualTo(2);
     }
@@ -210,7 +210,7 @@ public class TaskControllerTest {
         TaskController taskController = new TaskController(taskService, priorityService, categoryService);
         int id = 1;
         String page = taskController.completeTask(id);
-        assertThat(page).isEqualTo("redirect:/formTaskDetail/" + id + "?success=true");
+        assertThat(page).isEqualTo("redirect:/tasks/formTaskDetail/" + id + "?success=true");
     }
 
     /**
@@ -225,7 +225,7 @@ public class TaskControllerTest {
         TaskController taskController = new TaskController(taskService, priorityService, categoryService);
         int id = 1;
         String page = taskController.completeTask(id);
-        assertThat(page).isEqualTo("redirect:/formTaskDetail/" + id + "?success=false");
+        assertThat(page).isEqualTo("redirect:/tasks/formTaskDetail/" + id + "?success=false");
     }
 
     /**
@@ -238,6 +238,6 @@ public class TaskControllerTest {
         CategoryService categoryService = mock(CategoryService.class);
         TaskController taskController = new TaskController(taskService, priorityService, categoryService);
         String page = taskController.deleteTask(1);
-        assertThat(page).isEqualTo("redirect:/tasks");
+        assertThat(page).isEqualTo("redirect:/tasks/tasks");
     }
 }

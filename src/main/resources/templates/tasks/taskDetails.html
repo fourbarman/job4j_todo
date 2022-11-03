@@ -38,16 +38,16 @@
         <form class="form-inline">
             <ul class="navbar-nav mr-auto">
                 <li>
-                    <a class="nav-item nav-link" th:href="@{/tasks}">Все задачи</a>
+                    <a class="nav-item nav-link" th:href="@{/tasks/tasks}">Все задачи</a>
                 </li>
                 <li>
-                    <a class="nav-item nav-link" th:href="@{/completedTasks/true}">Выполненные</a>
+                    <a class="nav-item nav-link" th:href="@{/tasks/completedTasks/true}">Выполненные</a>
                 </li>
                 <li>
-                    <a class="nav-item nav-link" th:href="@{/completedTasks/false}">Новые</a>
+                    <a class="nav-item nav-link" th:href="@{/tasks/completedTasks/false}">Новые</a>
                 </li>
                 <li>
-                    <a class="nav-item nav-link" th:if="${user.username != 'Гость'}" th:href="@{/logout}">
+                    <a class="nav-item nav-link" th:if="${user.username != 'Гость'}" th:href="@{/users/logout}">
                         <span th:text="${user.username}"></span>
                         <span> | Выйти</span>
                     </a>
@@ -64,7 +64,7 @@
                 Задача помечена как выполненная!
             </div>
             <div class="card-body">
-                <form th:action="@{/updateTask}" method="POST" th:object="${task}">
+                <form th:action="@{/tasks/updateTask}" method="POST" th:object="${task}">
                     <div class="form-group">
                         <label for="id">id</label>
                         <input type="text" class="form-control" name="id" id="id" th:field="*{id}" readonly/>
@@ -105,9 +105,9 @@
                             </div>
                         </div>
                     </div>
-                    <a class="btn btn-primary mt-3" th:href="@{|/completeTask/${task.id}|}" role="button">Выполнено</a>
-                    <a class="btn btn-primary mt-3" th:href="@{|/formUpdateTask/${task.id}|}" role="button">Редактировать</a>
-                    <a class="btn btn-primary mt-3" th:href="@{|/deleteTask/${task.id}|}" role="button">Удалить</a>
+                    <a class="btn btn-primary mt-3" th:href="@{|/tasks/completeTask/${task.id}|}" role="button">Выполнено</a>
+                    <a class="btn btn-primary mt-3" th:href="@{|/tasks/formUpdateTask/${task.id}|}" role="button">Редактировать</a>
+                    <a class="btn btn-primary mt-3" th:href="@{|/tasks/deleteTask/${task.id}|}" role="button">Удалить</a>
                 </form>
             </div>
         </div>

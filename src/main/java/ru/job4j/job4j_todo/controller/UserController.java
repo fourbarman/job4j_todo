@@ -26,43 +26,44 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/loginPage")
+    @GetMapping("/users/loginPage")
     public String loginPage(Model model, @RequestParam(name = "fail", required = false) Boolean fail) {
         model.addAttribute("fail", fail != null);
-        return "login";
+        return "/users/login";
     }
 
-    @PostMapping("/login")
+    @PostMapping("/users/login")
     public String login(@ModelAttribute User user, HttpServletRequest request) {
         Optional<User> foundUser = this.userService.getUserByLoginAndPassword(user.getLogin(), user.getPassword());
         if (foundUser.isEmpty()) {
-            return "redirect:/loginPage?fail=true";
+            return "redirect:/users/loginPage?fail=true";
         }
         HttpSession session = request.getSession();
         session.setAttribute("user", foundUser.get());
         return "redirect:/index";
     }
 
-    @GetMapping("/register")
+    @GetMapping("/users/register")
     public String registerForm(Model model, @RequestParam(name = "fail", required = false) Boolean fail) {
         model.addAttribute("fail", fail != null);
-        return "register";
+        model.addAttribute("timezones", userService.getTimeZones());
+        return "/users/register";
     }
 
-    @PostMapping("/register")
+    @PostMapping("/users/register")
     public String register(@ModelAttribute User user, HttpServletRequest req) {
         Optional<User> addedUser = this.userService.addUser(user);
         if (addedUser.isEmpty()) {
-            return "redirect:/register?fail=true";
+            return "redirect:/users/register?fail=true";
         }
         HttpSession session = req.getSession();
         session.setAttribute("user", addedUser.get());
         return "redirect:/index";
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/users/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/loginPage";
+        return "redirect:/users/loginPage";
     }
 }

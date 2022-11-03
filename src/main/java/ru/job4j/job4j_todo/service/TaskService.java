@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.TimeZone;
 
 /**
  * TaskService.
@@ -26,9 +26,18 @@ import java.util.stream.Collectors;
 public class TaskService {
     private final TaskRepository taskRepository;
 
+    /**
+     * Set task created date and time in user's timezone.
+     * If user doesn't have timezone, then set default.
+     * @param user User.
+     * @return Task list with user's timezone.
+     */
     public List<Task> getAllTasks(User user) {
         List<Task> tasks = taskRepository.getAllTasks();
-        taskRepository.getAllTasks().forEach(t -> t.setCreated(t.getCreated().atZone(ZoneId.of(user.getTimezone())).toLocalDateTime()));
+        if (user.getTimezone().isEmpty()) {
+            user.setTimezone(TimeZone.getDefault().getID());
+        }
+        taskRepository.getAllTasks().forEach(t -> t.setCreated(t.getCreated().atZone(ZoneId.of(user.getTimezone(), ZoneId.SHORT_IDS)).toLocalDateTime()));
         return tasks;
     }
 
