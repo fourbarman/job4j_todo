@@ -13,6 +13,7 @@
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL10Dialect</property>
+        <property name="hibernate.jdbc.time_zone">UTC</property>
 
         <mapping class="ru.job4j.job4j_todo.model.Task" />
         <mapping class="ru.job4j.job4j_todo.model.User" />
